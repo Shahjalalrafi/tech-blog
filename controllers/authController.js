@@ -1,12 +1,20 @@
 const bcrypt = require('bcrypt')
+const {validationResult} = require('express-validator')
 
 const User = require('../models/User')
+const errorFormater = require('../utils/validationErrorFormater')
 
 exports.singUpGetController = (req, res, next) => {
-    res.render('pages/auth/signup')
+   return res.render('pages/auth/signup', {error: {}})
 }
 
 exports.singUpPostController = async (req, res, next) => {
+    let errors = validationResult(req).formatWith(errorFormater)
+
+    if(!errors.isEmpty()) {
+       return res.render('pages/auth/signup', {error: errors.mapped()})
+    }
+
     const {username, email, password} = req.body
 
     try{

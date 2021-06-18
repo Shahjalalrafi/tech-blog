@@ -3,6 +3,8 @@ const morgan = require('morgan')
 const mongoose = require('mongoose')
 
 const authRoute = require('./routes/authRoute')
+// playgroundRoutes
+const validatorRoutes = require('./playground/validator')
 
 const app = express()
 
@@ -27,7 +29,9 @@ const middleWare = [
 ]
 
 app.use(middleWare)
+
 app.use('/auth', authRoute)
+app.use('/playground', validatorRoutes)
 
 app.get('/', (req, res) => {
     res.json({
