@@ -1,13 +1,13 @@
 const {Schema, model} = require('mongoose')
 
-const Profile = require('./Profile')
+// const Profile = require('./Profile')
 
 const userSchema = new Schema({
-    name: {
+    username: {
         type: String,
         required: true,
         trim: true,
-        maxlength: 30
+        maxlength: 15
     },
     email: {
         type: String,
@@ -15,12 +15,12 @@ const userSchema = new Schema({
         trim: true
     },
     password: {
-        type: string,
+        type: String,
         required: true,
     },
     profile: {
         type: Schema.Types.ObjectId,
-        ref: Profile
+        ref: 'Profile'
     }
 }, {timestamps: true})
 

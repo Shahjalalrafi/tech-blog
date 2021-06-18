@@ -1,7 +1,20 @@
 const express = require('express')
 const morgan = require('morgan')
+const mongoose = require('mongoose')
+
+const authRoute = require('./routes/authRoute')
 
 const app = express()
+
+let uri = "mongodb+srv://myTodos:rafi1234@cluster0.fltsf.mongodb.net/techBlog?retryWrites=true&w=majority"
+
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log('db connected')
+    })
+    .catch(err => {
+        console.log(err)
+    })
 
 app.set('view engine', 'ejs')
 app.set('views', 'views')
@@ -14,12 +27,12 @@ const middleWare = [
 ]
 
 app.use(middleWare)
+app.use('/auth', authRoute)
 
 app.get('/', (req, res) => {
-    res.render('pages/auth/signup')
-    // res.json({
-    //     message:'hello everyOne'
-    // })
+    res.json({
+        message: 'hello world'
+    })
 })
 
 

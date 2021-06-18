@@ -1,7 +1,7 @@
 const {Schema, model} = require('mongoose')
 
 const Comment = require('./Comment')
-const User = require('./User')
+// const User = require('./User')
 
 const postSchema = new Schema({
     title: {
@@ -23,13 +23,13 @@ const postSchema = new Schema({
     like: [
         {
             type: Schema.Types.ObjectId,
-            ref: User
+            ref: 'User'
         }
     ],
     dislike: [
         {
             type: Schema.Types.ObjectId,
-            ref: User
+            ref: 'User'
         }
     ],
     comments: [

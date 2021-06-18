@@ -1,9 +1,33 @@
 <%- include('../../partials/header.ejs') %>
     
 <div class="container my-container">
-    <div class="jumbotron">
-        <h4>sign up page</h4>
-    <p class="lead">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laudantium nulla aliquam assumenda, porro odio consequatur numquam repellat dolores provident maxime earum quas odit fugiat nisi recusandae suscipit ratione optio aliquid.</p>
+    <div class="row">
+        <div class="col-md-6 my-5 m-auto">
+            <div class="card card-body my-5">
+                <form action="/auth/signup"  method="post">
+                    <div class="form-group my-2">
+                        <label for="username">provide your unique username</label>
+                        <input type="text" name="username" id="username" class="form-control">
+                    </div>
+                    <div class="form-group my-2">
+                        <label for="email">Enter your valid email</label>
+                        <input type="email" name="email" id="email" class="form-control">
+                    </div>
+                    <div class="form-group my-2">
+                        <label for="password">Your password</label>
+                        <input type="password" name="password" id="password" class="form-control">
+                    </div>
+                    <div class="form-group my-2">
+                        <label for="confirmPassword">confirm password</label>
+                        <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="signUp">
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
