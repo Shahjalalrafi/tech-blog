@@ -8,11 +8,17 @@
                 <form action="/auth/login"  method="post">
                     <div class="form-group my-2">
                         <label for="email">Enter your valid email</label>
-                        <input type="email" name="email" id="email" class="form-control">
+                        <input type="email" name="email" id="email" class="form-control <%= error.email ? 'is-invalid' : '' %>">
+                        <div class="invalid-feedback">
+                            <%= error.email && error.email %>
+                        </div>
                     </div>
                     <div class="form-group my-2">
                         <label for="password">Your password</label>
-                        <input type="password" name="password" id="password" class="form-control">
+                        <input type="password" name="password" id="password" class="form-control <%= error.password ? 'is-invalid' : '' %>">
+                        <div class="invalid-feedback">
+                            <%= error.password && error.password %>
+                        </div>
                     </div>
                     <div class="text-center">
                         <input type="submit" class="btn btn-primary" value="login">
