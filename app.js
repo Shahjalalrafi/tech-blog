@@ -3,6 +3,7 @@ const express = require('express')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
 const session = require('express-session')
+const flash = require('connect-flash')
 var MongoDBStore = require('connect-mongodb-session')(session);
 
 // internal imports
@@ -50,7 +51,8 @@ const middleWare = [
         store: store
     }),
     bindUserWithRequest(),
-    setlocals()
+    setlocals(),
+    flash()
 ]
 
 app.use(middleWare)

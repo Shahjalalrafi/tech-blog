@@ -5,11 +5,13 @@ const loginValidator = require('../validator/auth/loginValidator')
 
 const { singUpGetController, singUpPostController, loginGetController, loginPostController, logoutGetController} = require('../controllers/authController')
 
+const { isUnAuthenticated } = require('../middleware/authmiddleware')
 
-router.get('/signUp', singUpGetController)
-router.post('/signUp', signUpValidator,  singUpPostController)
-router.get('/login', loginGetController)
-router.post('/login', loginValidator, loginPostController)
+
+router.get('/signUp',isUnAuthenticated, singUpGetController)
+router.post('/signUp',isUnAuthenticated, signUpValidator,  singUpPostController)
+router.get('/login',isUnAuthenticated, loginGetController)
+router.post('/login',isUnAuthenticated, loginValidator, loginPostController)
 router.get('/logout', logoutGetController)
 
 module.exports = router
