@@ -1,4 +1,5 @@
 // external exports
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
@@ -10,13 +11,13 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 const authRoute = require('./routes/authRoute')
 const dashboardRoute = require('./routes/dashboardRoute')
 // playgroundRoutes
-const validatorRoutes = require('./playground/validator')
+// const validatorRoutes = require('./playground/validator')
 
 // import middleWare
 const { bindUserWithRequest} = require('./middleware/authmiddleware')
 const { setlocals } = require('./middleware/setlocals')
 
-const MONGODB_URI = "mongodb+srv://myTodos:rafi1234@cluster0.fltsf.mongodb.net/techBlog?retryWrites=true&w=majority"
+const MONGODB_URI = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASSWORD}@cluster0.fltsf.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`
 // mongodb session
 const store = new MongoDBStore({
     uri: MONGODB_URI,
@@ -36,11 +37,17 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true 
         console.log(err)
     })
 
+
+    
+
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
+if(app.get('env').toLowerCase() === 'development') {
+    app.use(morgan('dev'))
+}
+
 const middleWare = [
-    morgan('dev'),
     express.urlencoded({extended: true}),
     express.static('public'),
     express.json(),
@@ -58,8 +65,8 @@ const middleWare = [
 app.use(middleWare)
 
 app.use('/auth', authRoute)
-app.use('/playground', validatorRoutes)
 app.use('/dashboard', dashboardRoute)
+// app.use('/playground', validatorRoutes)
 
 app.get('/', (req, res) => {
     res.json({
