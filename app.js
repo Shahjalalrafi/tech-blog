@@ -3,27 +3,16 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const mongoose = require('mongoose')
-const session = require('express-session')
-const flash = require('connect-flash')
-var MongoDBStore = require('connect-mongodb-session')(session);
+const config = require('config')
 
 // internal imports
-const authRoute = require('./routes/authRoute')
-const dashboardRoute = require('./routes/dashboardRoute')
-// playgroundRoutes
-// const validatorRoutes = require('./playground/validator')
+const setRoute = require('./routes/routes')
+const setMiddleWare = require('./middleware/middleware')
 
-// import middleWare
-const { bindUserWithRequest} = require('./middleware/authmiddleware')
-const { setlocals } = require('./middleware/setlocals')
 
 const MONGODB_URI = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASSWORD}@cluster0.fltsf.mongodb.net/${process.env.DB_COLLECTION}?retryWrites=true&w=majority`
 // mongodb session
-const store = new MongoDBStore({
-    uri: MONGODB_URI,
-    collection: 'sessions',
-    expires: 1000 * 60 * 60 * 2
-  })
+
 
 const app = express()
 
@@ -38,8 +27,6 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true 
     })
 
 
-    
-
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
@@ -47,33 +34,33 @@ if(app.get('env').toLowerCase() === 'development') {
     app.use(morgan('dev'))
 }
 
-const middleWare = [
-    express.urlencoded({extended: true}),
-    express.static('public'),
-    express.json(),
-    session({
-        secret: process.env.SECRET_KEY || 'SECRET_KEY',
-        resave: false,
-        saveUninitialized: false,
-        store: store
-    }),
-    bindUserWithRequest(),
-    setlocals(),
-    flash()
-]
+const dbConfig = config.get('name')
+console.log(dbConfig)
 
-app.use(middleWare)
 
-app.use('/auth', authRoute)
-app.use('/dashboard', dashboardRoute)
-// app.use('/playground', validatorRoutes)
+// using middleware from middleware directory
+setMiddleWare(app)
 
-app.get('/', (req, res) => {
-    res.json({
-        message: 'hello world'
-    })
+// user routes from routes directory
+setRoute(app)
+
+app.use((req, res, next) => {
+    let error = new Error('404 page not found!')
+    error.status = 404
+    next(error)
 })
 
+app.use((error, req, res, next) =>{
+    if(error.status ===  404) {
+        return res.render('pages/error/404', {
+            flashMessage: {}
+        })
+    }
+
+    return res.render('pages/error/505', {
+        flashMessage: {}
+    })
+})
 
 const port = 5000
 app.listen(port, () => {
